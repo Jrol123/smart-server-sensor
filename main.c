@@ -12,5 +12,7 @@ int main(void)
     params_datchik.pin = GPIO_PIN(PORT_A, 0);
 
     ds18_t datchik;
-    datchik.params = params_datchik;
+    // datchik.params = params_datchik;
+
+    ds18_init(&datchik, &params_datchik);
 }

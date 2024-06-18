@@ -1,14 +1,15 @@
 # name of your application
-APPLICATION = lab_uno
+APPLICATION = lab_duolingo
 
 # name of your board
 BOARD ?= stm32f334c8-disco
 
 # Used modules
-USEMODULE += xtimer
+# USEMODULE += xtimer
 USEMODULE += periph_gpio_irq
 USEMODULE += periph_rtc
-USEMODULE += periph_pwm
+USEMODULE += ds18
+# USEMODULE += periph_pwm
 
 # This has to be the absolute path to the RIOT base directory:
 RIOTBASE ?= $(CURDIR)/../..
