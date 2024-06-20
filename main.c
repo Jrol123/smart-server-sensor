@@ -3,29 +3,44 @@
 #include "periph/gpio.h"
 #include "board.h"
 
+#define SAMPLING_PERIOD 2
+
+static const ds18_params_t ds18_params = {
+        .pin = GPIO_PIN(PORT_A, 1),
+        .out_mode = GPIO_OD,
+        .in_mode = GPIO_IN,
+    };
+
+    static ds18_t dev;
+    int16_t temperature;
+
 int main(void)
 {
-    ds18_params_t params_datchik;
+    printf("Init DS18B20...");
 
-    params_datchik.in_mode = GPIO_IN;
-    params_datchik.out_mode = GPIO_OD_PU;
-    params_datchik.pin = GPIO_PIN(PORT_A, 0);
-
-    ds18_t datchik;
-    // datchik.params = params_datchik;
-
-    int status = ds18_init(&datchik, &params_datchik);
-
-    printf("status of init: %i\n", status);
+    if (ds18_init(&dev, &ds18_params) == DS18_ERROR)
+    {
+        puts("FAILED");
+        return 1;
+    }
+    else
+    {
+        puts("OK");
+    };
 
     while (1)
     {
-        int16_t temp;
-        ds18_get_temperature(&datchik, &temp);
+        if (ds18_get_temperature(&dev, &temperature) == DS18_OK)
+        {
+            printf("%d\n", temperature);
+        }
+        else
+        {
+            puts("Could not read temperature");
+        };
         // temp /= 100;
         // puts("read");
 
-        printf("output: %i\n", temp);
-        xtimer_sleep(1);
+        xtimer_sleep(SAMPLING_PERIOD);
     }
 }
