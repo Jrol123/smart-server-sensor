@@ -5,11 +5,10 @@ APPLICATION = lab_duolingo
 BOARD ?= stm32f334c8-disco
 
 # Used modules
-# USEMODULE += xtimer
-USEMODULE += periph_gpio_irq
-USEMODULE += periph_rtc
+USEMODULE += xtimer
+USEMODULE += periph_gpio
 USEMODULE += ds18
-# USEMODULE += periph_pwm
+USEMODULE += printf_float
 
 # This has to be the absolute path to the RIOT base directory:
 RIOTBASE ?= $(CURDIR)/../..
