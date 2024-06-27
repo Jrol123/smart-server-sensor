@@ -4,11 +4,14 @@ APPLICATION = lab_duolingo
 # name of your board
 BOARD ?= stm32f334c8-disco
 
+# FEATURES_REQUIRED += cpp
+
 # Used modules
 USEMODULE += xtimer
 USEMODULE += periph_gpio
 USEMODULE += ds18
 USEMODULE += printf_float
+# USEMODULE += curl_curl
 
 # This has to be the absolute path to the RIOT base directory:
 RIOTBASE ?= $(CURDIR)/../..
