@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta lang="ru">
+        <meta description="smart temperature app">
+        <meta autor="Serepok">
+        <title>Пошел нахуй, сука</title>
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.png') }}">
+    </head>
+
+    <body>
+        <div id="data-container">???</div>
+    </body>
+
+    <script>
+        const eventSource = new EventSource('/stream-data');
+
+        eventSource.onmessage = function(event) {
+            // Обработка полученных данных и отображение на странице
+            const receivedData = event.data;
+            document.getElementById('data-container').textContent = receivedData;
+        };
+    </script>
+
+</html>
