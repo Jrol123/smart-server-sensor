@@ -11,7 +11,11 @@ USEMODULE += xtimer
 USEMODULE += periph_gpio
 USEMODULE += ds18
 USEMODULE += printf_float
-# USEMODULE += curl_curl
+
+USEMODULE += gnrc_ipv6
+USEMODULE += sock_udp
+USEMODULE += posix_sockets
+USEMODULE += posix_inet
 
 # This has to be the absolute path to the RIOT base directory:
 RIOTBASE ?= $(CURDIR)/../..
