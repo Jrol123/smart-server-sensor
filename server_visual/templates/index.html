@@ -7,7 +7,7 @@
         <meta lang="ru">
         <meta description="smart temperature app">
         <meta autor="Serepok">
-        <title>Пошел нахуй, сука</title>
+        <title>Упс, забыл</title>
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.png') }}">
     </head>
 
@@ -21,6 +21,7 @@
         eventSource.onmessage = function(event) {
             // Обработка полученных данных и отображение на странице
             const receivedData = event.data;
+            console.log(receivedData);
             document.getElementById('data-container').textContent = receivedData;
         };
     </script>

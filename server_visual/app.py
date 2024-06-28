@@ -1,5 +1,7 @@
 from flask import Flask, request, render_template, Response
 from queue import Queue
+from flask_sqlalchemy import SQLAlchemy
+
 
 #  ______     __  __     ______        ______     ______     ______     __
 # /\  __ \   /\ \/\ \   /\  == \      /\  ___\   /\  __ \   /\  __ \   /\ \
@@ -14,8 +16,27 @@ from queue import Queue
 #   \/_/     \/_/ /_/   \/_____/ \/_____/   \/_____/   \/_____/     \/_/
 
 app = Flask(__name__)
+
 # Очередь с данными
 data_queue = Queue()
+
+# подключение базы данных
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///temperature.db'
+db = SQLAlchemy(app)
+
+
+class Record(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    temperature = db.Column(db.Integer, unique=False, nullable=False)
+
+    def __repr__(self):
+        return f'<Record {self.temperature}>'
+
+
+# Обработка контекста приложения
+with app.app_context():
+    # Создание всех таблиц базы данных
+    db.create_all()
 
 
 # Главная страница
@@ -25,7 +46,7 @@ def main_page():
 
 
 # Маршрут для установки соединения SSE
-@app.route('/stream-data', methods=['POST'])
+@app.route('/stream-data')
 def stream_data():
     def generate_data():
         # Извлечение данных из очереди
