@@ -1,3 +1,4 @@
+import socket
 from flask import Flask, request, render_template, Response
 from queue import Queue
 from flask_sqlalchemy import SQLAlchemy
@@ -24,6 +25,15 @@ data_queue = Queue()
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///temperature.db'
 db = SQLAlchemy(app)
 
+def get_ipv6_address(interface):
+    import netifaces
+    return netifaces.ifaddresses(interface)[netifaces.AF_INET6][0]['addr']
+
+global_ipv6_address = get_ipv6_address('lo')  # замените 'eth0' на ваш сетевой интерфейс
+
+sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+sock.bind((global_ipv6_address, 65536))
+
 
 class Record(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -42,7 +52,10 @@ with app.app_context():
 # Главная страница
 @app.route('/')
 def main_page():
-    return render_template('index.html')
+    data, addr = sock.recvfrom(1024)
+    data_queue.put(data.decode())
+    print(addr, list(data_queue.queue))
+    return render_template('index.html', context={'data': list(data_queue.queue)})
 
 
 # Маршрут для установки соединения SSE
@@ -58,16 +71,20 @@ def stream_data():
 
 
 # Получение данных из POST запроса и помещение в очередь
-@app.route('/post', methods=['POST'])
+@app.route('/postt', methods=['POST'])
 def process_post_request():
-    data = request.get_json()
-    temperature = str(data.get('temperature'))
+    print("fafaff")
+    data = request.data # request.get_json()
+    temperature = data # str(data.get('temperature'))
     data_queue.put(temperature)
-    return "Data received"
+    if temperature:
+        return "Data received"
+    else:
+        return "None"
 
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(port=65536)
 ######################
 #!!  ВОСТОРГАЕМСЯ  !!#
 ######################

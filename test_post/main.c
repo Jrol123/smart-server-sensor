@@ -19,7 +19,7 @@
 #include <sys/socket.h>
 
 // Address for sending (copy your server's IPv6 here)
-#define SEND_ADDR  "fe80::2812:caa2:9b2d:c2ea"
+#define SEND_ADDR  "fe80::215:5dff:fee0:b618"
 #define SEND_PORT  7777
 
 int main(void)
