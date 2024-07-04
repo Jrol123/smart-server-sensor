@@ -16,8 +16,8 @@
 #include <sys/socket.h>
 
 #define SAMPLING_PERIOD 2
-#define SEND_ADDR  "::1"
-#define SEND_PORT  5000
+#define SEND_ADDR  "fe80::2812:caa2:9b2d:c2ea"
+#define SEND_PORT  7777
 // sudo stlink -P examples/smart-server-sensor/bin/stm32f334c8-disco/lab_duolingo.bin 0x08000000
 // ./configure --host=arm-none-eabi --disable-ftp --disable-file --enable-ipv6 --disable-dict --disable-ldap --disable-ldaps --disable-telnet --disable-tftp --disable-pop3 --disable-imap --disable-smtp --disable-gopher --disable-sspi --disable-schannel --disable-rtsp --disable-esni --disable-co --disable-manual --disable-https --disable-tls-srp --disable-unix-sockets --disable-ares --disable-rt --disable-soname-bump --with-wolfssl --without-ssl --without-libidn2 --without-libpsl --without-nghttp2 --without-libmetalink --without-zstd --without-brotli --without-quiche
 
