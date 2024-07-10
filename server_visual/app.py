@@ -3,6 +3,8 @@ from queue import Queue
 from flask_sqlalchemy import SQLAlchemy
 import serial
 import io
+import time
+from threading import Thread
 
 from serial.serialutil import EIGHTBITS
 
@@ -23,12 +25,13 @@ app = Flask(__name__)
 # Очередь с данными
 data_queue = Queue()
 
-# подключение базы данных
+# Подключение базы данных
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///temperature.db'
 db = SQLAlchemy(app)
 
 s = serial.Serial('COM3', baudrate=115200, bytesize=EIGHTBITS, timeout=1)
 sio = io.TextIOWrapper(s, newline='\n')
+
 
 class Record(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -42,6 +45,16 @@ class Record(db.Model):
 with app.app_context():
     # Создание всех таблиц базы данных
     db.create_all()
+
+
+def something():
+    while True:
+        print("Здесь выполняй что хош")
+        time.sleep(2)
+
+
+thread = Thread(target=something)
+thread.start()
 
 
 # Главная страница
@@ -81,5 +94,5 @@ def process_post_request():
 if __name__ == '__main__':
     app.run(port=65536)
 ######################
-# !!  ВОСТОРГАЕМСЯ  !!#
+# !!    СТРАДАЕМ   !!#
 ######################
