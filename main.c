@@ -15,7 +15,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 
-#define SAMPLING_PERIOD 2
+#define SAMPLING_PERIOD 2000
 #define SEND_ADDR  "fe80::2812:caa2:9b2d:c2ea%10"
 #define SEND_PORT  7777
 // sudo stlink -P examples/smart-server-sensor/bin/stm32f334c8-disco/lab_duolingo.bin 0x08000000
@@ -125,22 +125,9 @@ int main(void)
             // sprintf(buf, "%0.4f", temperature / 100.0);
             // printf("%f\n", temperature / 100.0);
             sprintf(post_data, "temperature=%f", temperature / 100.0);
-            
-            // // Формирование POST-запроса
-            // sprintf(buffer, "POST /postt HTTP/1.1\r\nHost: 127.0.0.1:5000\r\n"
-            //                 // "Content-Type: application/x-www-form-urlencoded\r\n"
-            //                 "Content-Length: %i\r\n\r\n%s", 
-            //                 strlen(post_data) + 1, post_data);
-
-            // // Отправка данных на сервер
-            // ssize_t sent_bytes = send(client_socket, post_data, strlen(post_data) + 1, 0);
-
-            // ssize_t sent_bytes = sendto(sockfd, post_data, strlen(post_data), 0, 
-            //                             (struct sockaddr *) &dest_addr, 
-            //                             sizeof(dest_addr));
-
-            ssize_t sent_bytes = sendto(sock, post_data, strlen(post_data) + 1, 0, 
-                   (struct sockaddr *)&addr_dst, sizeof(addr_dst));
+            ssize_t sent_bytes = sendto(sock, post_data, strlen(post_data) + 1, 
+                                        0, (struct sockaddr *)&addr_dst, 
+                                        sizeof(addr_dst));
 
             if (sent_bytes < 0) {
                 perror("sendto failed\n");
@@ -150,30 +137,15 @@ int main(void)
                 printf("bytes sent: %d\n", sent_bytes);
             };
 
-            printf("%f\n", temperature / 100.0);
-
-            // Формирование POST-запроса
-            // sprintf(request, 
-            //         "POST / HTTP/1.1\r\nHost: %s:%i\r\nContent-length: %i\r\n\r\n%s", 
-            //         SEND_ADDR, SEND_PORT, strlen(post_data), post_data);
-
-            // Отправка POST-запроса
-            // if (send(sock, request, strlen(request), 0) < 0) {
-            //     perror("Ошибка при отправке POST-запроса");
-            //     // return 1;
-            // }
+            printf("%f\n", temperature / 100.0)
         }
         else
         {
             puts("Could not read temperature");
         }
-        // temp /= 100;
-        // puts("read");
 
-        xtimer_sleep(SAMPLING_PERIOD);
+        xtimer_msleep(SAMPLING_PERIOD);
     }
 
-    // curl_easy_cleanup(curl);
-    // close(sockfd);
     return 0;
 }
