@@ -73,10 +73,10 @@ def main_page():
 def update_data():
     with app.app_context():
         # Извлечение данных из БД
-        data = Record.query.order_by(Record.timestamp.asc()).all()
-        time_arr = [record.timestamp for record in data].reverse()
-        temp_arr = [record.temperature for record in data].reverse()
-        y = [record.temperature for record in Record.query.order_by(Record.timestamp.desc()).limit(100).all()].reverse()
+        data = Record.query.order_by(Record.timestamp.desc()).all()
+        time_arr = [record.timestamp for record in data]
+        temp_arr = [record.temperature for record in data]
+        y = [record.temperature for record in Record.query.order_by(Record.timestamp.desc()).limit(100).all()[::-1]]
         connected_mk = Record.query.order_by(Record.timestamp.desc()).first().count_controllers
 
         # Преобразование чисел в формат Python-friendly для сериализации в JSON
