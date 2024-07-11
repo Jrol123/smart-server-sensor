@@ -76,7 +76,7 @@ def update_data():
         data = Record.query.order_by(Record.timestamp.asc()).all()
         time_arr = [record.timestamp for record in data].reverse()
         temp_arr = [record.temperature for record in data].reverse()
-        y = [record.temperature for record in Record.query.order_by(Record.timestamp.desc()).limits(100).all()].reverse()
+        y = [record.temperature for record in Record.query.order_by(Record.timestamp.desc()).limit(100).all()].reverse()
         connected_mk = Record.query.order_by(Record.timestamp.desc()).first().count_controllers
 
         # Преобразование чисел в формат Python-friendly для сериализации в JSON
