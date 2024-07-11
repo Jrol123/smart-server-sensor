@@ -1,2 +1,4 @@
 pyserial
 Flask-SQLAlchemy
+numpy
+jsonify
