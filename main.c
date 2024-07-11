@@ -6,7 +6,7 @@
 #include <xtimer.h>
 #include <ds18.h>
 
-#define SAMPLING_PERIOD 200
+#define SAMPLING_PERIOD 3000
 // sudo stlink -P examples/smart-server-sensor/bin/stm32f334c8-disco/lab_duolingo.bin 0x08000000
 // sudo stlink -P bin/stm32f334c8-disco/lab_duolingo.bin 0x08000000
 
@@ -60,11 +60,30 @@ int main(void)
         return 1;
     }
     else
-    {
-        // puts("OK");
-    };
+    // {
+    //     puts("OK");
+    // };
 
     printf("id=%d\n", id);
+
+    char buff[32];
+    while ("сущ") {
+        gets(buff);
+        if (strstr(buff, "OK") != NULL) {
+            break;
+        }
+        else{
+            printf("id=%d\n", id);
+            puts(buff);
+        }
+
+        // puts("Waiting for confirming");
+        // xtimer_msleep(SAMPLING_PERIOD);
+        // if ((float)rand() / RAND_MAX <= 0.1) {
+        //     puts("OK");
+        // }
+    }
+
     while (1)
     {
         if (ds18_get_temperature(&dev, &temperature) == DS18_OK)
