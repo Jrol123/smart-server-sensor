@@ -1,9 +1,11 @@
 from flask import Flask, render_template, Response
 from queue import Queue
 from flask_sqlalchemy import SQLAlchemy
+
 from read_data import read
 import time
 from threading import Thread
+
 import jsonify
 import numpy as np
 
@@ -48,7 +50,7 @@ def get_temp():
         while True:
             temperature, count_controllers = read()
             db.session.add(Record(temperature=temperature, count_controllers=count_controllers, timestamp=time.time()))
-            print(temperature, count_controllers)
+            # print(temperature, count_controllers)
             db.session.commit()
             time.sleep(SLEEP_TIME)
 
@@ -85,3 +87,6 @@ def update_data():
 
 if __name__ == '__main__':
     app.run(port=5000)
+######################
+# !!  ВОСТОРГАЕМСЯ  !!#
+######################

@@ -3,6 +3,9 @@ import io
 
 from serial.serialutil import EIGHTBITS
 
+PERIPH_ERROR = "Could not read temperature"
+OK = "OK\n"
+
 
 class Controller:
     def __init__(self, id: int, geolocation: str):
@@ -28,9 +31,21 @@ class Port:
         try:
             # геолокация (пробел) id
             result = self.port.readline()
+
             print(result)
+
+            result = result.replace('\n', '')
+
+            # Если ошибка датчика
+            if result == PERIPH_ERROR or result == '':
+                return False
             result = result.split(' ')
-            # if len.result
+
+            # Считывает первую строку RIOT-а
+            if len(result) > 2:
+                result = self.port.readline().replace('\n', '').split(' ')
+
+            # Если не привязан контроллер
             if self.control is None:
                 found = False
                 for control in existing_controllers:
@@ -43,7 +58,10 @@ class Port:
                     existing_controllers.append(self.control)
                 return True
             else:
-                return result[0], result[1]
+                if len(result) == 1:
+                    return self.control.geolocation, result[0]
+                else:
+                    return False
         except:
             self.control = None
             return False
@@ -65,17 +83,21 @@ def port_cycle(ports: list[Port]):
         if port.port is None:
             state = port.try_init()
             if state:
-                output_data.append(port.read())
+                result = port.read()
+                if isinstance(result, tuple):
+                    output_data.append(result)
         else:
-            output_data.append(port.read())
+            result = port.read()
+            if isinstance(result, tuple):
+                output_data.append(result)
     return output_data
 
 
-def calc_temp(mass_data: list[int]) -> float | None:
+def calc_temp(mass_data: list[str, int]) -> float | None:
     if len(mass_data) == 0:
-        # TypeError: unsupported operand type(s) for +: 'int' and 'tuple'
         return None
-    return sum(mass_data) / (len(mass_data) * 100)
+    print(mass_data)
+    return sum(int(i[1]) for i in mass_data) / (len(mass_data) * 100)
 
 
 def read() -> tuple[float | None, int]:
