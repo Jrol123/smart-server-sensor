@@ -6,6 +6,8 @@
 #include <xtimer.h>
 #include <ds18.h>
 
+#define ID 0
+
 #define SAMPLING_PERIOD 3000
 // sudo stlink -P examples/smart-server-sensor/bin/stm32f334c8-disco/lab_duolingo.bin 0x08000000
 // sudo stlink -P bin/stm32f334c8-disco/lab_duolingo.bin 0x08000000
@@ -49,7 +51,6 @@ int main(void)
     // puts("wow!!!!!!!!!!!!!!!!!!!!");
     // int id = atoi(line);
     // fclose(conf);
-    int id = 0;
 
     xtimer_init();
     // printf("Init DS18B20...");
@@ -59,30 +60,28 @@ int main(void)
         puts("FAILED");
         return 1;
     }
-    else
+    // else
     // {
     //     puts("OK");
     // };
 
-    printf("id=%d\n", id);
+    // printf("vladivostok %d\n", ID);
+    puts("vladivostok 0");
 
     char buff[32];
-    while ("сущ") {
+    while (true) {
         gets(buff);
         if (strstr(buff, "OK") != NULL) {
             break;
         }
-        else{
-            printf("id=%d\n", id);
-            puts(buff);
-        }
-
-        // puts("Waiting for confirming");
-        // xtimer_msleep(SAMPLING_PERIOD);
-        // if ((float)rand() / RAND_MAX <= 0.1) {
-        //     puts("OK");
-        // }
     }
+
+    //     // puts("Waiting for confirming");
+    //     // xtimer_msleep(SAMPLING_PERIOD);
+    //     // if ((float)rand() / RAND_MAX <= 0.1) {
+    //     //     puts("OK");
+    //     // }
+    // }
 
     while (1)
     {

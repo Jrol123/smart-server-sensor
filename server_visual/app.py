@@ -1,7 +1,11 @@
 from flask import Flask, render_template, Response
 from queue import Queue
 from flask_sqlalchemy import SQLAlchemy
-from read_data import start_init, read
+from read_data import read
+import time
+from threading import Thread
+
+SLEEP_TIME = 3
 
 #  ______     __  __     ______        ______     ______     ______     __
 # /\  __ \   /\ \/\ \   /\  == \      /\  ___\   /\  __ \   /\  __ \   /\ \
@@ -21,31 +25,41 @@ app = Flask(__name__)
 data_queue = Queue()
 
 # подключение базы данных
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///temperature.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 
 
 class Record(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    temperature = db.Column(db.Integer, unique=False, nullable=False)
+    temperature = db.Column(db.Float, unique=False, nullable=True)
+    count_controllers = db.Column(db.Integer, unique=False, nullable=False)
+    timestamp = db.Column(db.Integer, unique=False, nullable=False)  # Unix
 
     def __repr__(self):
         return f'<Record {self.temperature}>'
 
 
-# Обработка контекста приложения
+def get_temp():
+    with app.app_context():
+        while True:
+            temperature, count_controllers = read()
+            db.session.add(Record(temperature=temperature, count_controllers=count_controllers, timestamp=time.time()))
+            print(temperature, count_controllers)
+            db.session.commit()
+            time.sleep(SLEEP_TIME)
+
+
+thread = Thread(target=get_temp)
+thread.start()
+
 with app.app_context():
-    # Создание всех таблиц базы данных
     db.create_all()
 
 
 # Главная страница
 @app.route('/')
 def main_page():
-    temperature, count_controllers = read()
-    print(temperature)
-    data_queue.put(temperature)
-
+    read()
     return render_template('index.html', context={'data': list(data_queue.queue)})
 
 
@@ -53,16 +67,17 @@ def main_page():
 @app.route('/stream-data')
 def stream_data():
     def generate_data():
-        # Извлечение данных из очереди
-        if not data_queue.empty():
-            data = data_queue.get()
-            yield f"data: {data}\n\n"
+        with app.app_context():
+            # Извлечение данных из БД
+            data = Record.query.order_by(Record.timestamp.desc()).first()
+            temperature, count_controllers = data.temperature, data.count_controllers
+            print(temperature, count_controllers)
+            yield f"data: {temperature, count_controllers}\n\n"
 
     return Response(generate_data(), content_type='text/event-stream')
 
 
 if __name__ == '__main__':
-    start_init()
     app.run(port=65536)
 ######################
 # !!  ВОСТОРГАЕМСЯ  !!#
