@@ -28,6 +28,8 @@ class Port:
         try:
             # геолокация (пробел) id
             result = self.port.readline()
+            print(result)
+            result = result.split(' ')
             # if len.result
             if self.control is None:
                 found = False
@@ -71,6 +73,7 @@ def port_cycle(ports: list[Port]):
 
 def calc_temp(mass_data: list[int]) -> float | None:
     if len(mass_data) == 0:
+        # TypeError: unsupported operand type(s) for +: 'int' and 'tuple'
         return None
     return sum(mass_data) / (len(mass_data) * 100)
 
