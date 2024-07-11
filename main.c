@@ -24,7 +24,6 @@
 //     }
 // }
 
-
 int main(void)
 {
     // объявление основных переменных
@@ -65,15 +64,26 @@ int main(void)
     //     puts("OK");
     // };
 
-    // printf("vladivostok %d\n", ID);
-    puts("vladivostok 0");
+    printf("vladivostok %d\n", ID);
+    // puts("vladivostok 0");
+
+    //! Костыль
+    int count = 0;
 
     char buff[32];
-    while (true) {
+    while (count < 2)
+    {
         gets(buff);
-        if (strstr(buff, "OK") != NULL) {
+        if (strstr(buff, "OK") != NULL)
+        {
             break;
         }
+        else
+        {
+            printf("vladivostok %d\n", ID);
+            xtimer_sleep(1);
+        }
+        count += 1;
     }
 
     //     // puts("Waiting for confirming");
