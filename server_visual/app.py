@@ -4,6 +4,10 @@ from flask_sqlalchemy import SQLAlchemy
 from read_data import read
 import time
 from threading import Thread
+import jsonify
+import numpy as np
+
+x = np.arange(0, 10, 0.1)
 
 SLEEP_TIME = 3
 
@@ -63,22 +67,21 @@ def main_page():
     return render_template('index.html', context={'data': list(data_queue.queue)})
 
 
-# Маршрут для установки соединения SSE
-@app.route('/stream-data')
-def stream_data():
+@app.route('/update', methods=['GET', 'POST'])
+def update_data():
     def generate_data():
         with app.app_context():
             # Извлечение данных из БД
-            data = Record.query.order_by(Record.timestamp.desc()).first()
-            temperature, count_controllers = data.temperature, data.count_controllers
-            print(temperature, count_controllers)
-            yield f"data: {temperature, count_controllers}\n\n"
+            data = Record.query.order_by(Record.timestamp.asc()).all()
+            time_arr = [record.timestamp for record in data].reverse()
+            temp_arr = [record.temperature for record in data].reverse()
+            y = [record.temperature for record in Record.query.order_by(Record.timestamp.desc()).limits(100).all()].reverse()
+            connected_mk = Record.query.order_by(Record.timestamp.desc()).first().count_controllers
 
-    return Response(generate_data(), content_type='text/event-stream')
+            # Преобразование чисел в формат Python-friendly для сериализации в JSON
+            data = {'x': x.tolist(), 'y': y, 'cmk': connected_mk, 'time': time_arr, 'temp': temp_arr}
+        return jsonify(data)
 
 
 if __name__ == '__main__':
-    app.run(port=65536)
-######################
-# !!  ВОСТОРГАЕМСЯ  !!#
-######################
+    app.run(port=5000)
