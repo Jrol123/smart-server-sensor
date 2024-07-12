@@ -6,8 +6,10 @@ from read_data import read
 import time
 from threading import Thread
 
+import numpy as np
+
 # Метки оси x для отображения данных
-x = list(range(10))
+x = np.arange(0, 10, 0.1)
 
 # Интервал получения данных с датчиков
 SLEEP_TIME = 3
@@ -79,11 +81,11 @@ def update_data():
         data = Record.query.order_by(Record.timestamp.desc()).all()
         time_arr = [record.timestamp for record in data]
         temp_arr = [record.temperature for record in data]
-        y = [record.temperature for record in Record.query.order_by(Record.timestamp.desc()).limit(10).all()[::-1]]
+        y = [record.temperature for record in Record.query.order_by(Record.timestamp.desc()).limit(100).all()[::-1]]
         connected_mk = Record.query.order_by(Record.timestamp.desc()).first().count_controllers
 
         # Преобразование чисел в формат Python-friendly для сериализации в JSON
-        data = {'x': x, 'y': y, 'cmk': connected_mk, 'time': time_arr, 'temp': temp_arr}
+        data = {'x': x.tolist(), 'y': y, 'cmk': connected_mk, 'time': time_arr, 'temp': temp_arr}
 
         return jsonify(data)
 
