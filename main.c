@@ -7,9 +7,9 @@
 #include <ds18.h>
 
 // ID устройства
-#define ID (1)
+#define ID (0)
 // Геолокация
-#define GEOLOCATION ("Vladivostok")
+#define GEOLOCATION ("00.00.00.00")
 
 // Частота считывания данных
 #define SAMPLING_PERIOD (3000)
@@ -37,7 +37,7 @@ int main(void) {
     printf("%s %d\n", GEOLOCATION, ID);
 
     // Ожидание ответа сервера
-    #define const_pr = 3
+    #define const_pr (3)
     int count = 0;
 
     char buff[32];
