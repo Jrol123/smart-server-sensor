@@ -6,10 +6,10 @@ from read_data import read
 import time
 from threading import Thread
 
-COUNT_HUYNIA = 10
+COUNT_STEP = 10
 
 # Метки оси x для отображения данных
-x = [i for i in range(0, COUNT_HUYNIA)]
+x = [i for i in range(0, COUNT_STEP)]
 
 # Интервал получения данных с датчиков
 SLEEP_TIME = 3
@@ -81,7 +81,8 @@ def update_data():
         data = Record.query.order_by(Record.timestamp.desc()).all()
         time_arr = [record.timestamp for record in data]
         temp_arr = [record.temperature for record in data]
-        y = [record.temperature for record in Record.query.order_by(Record.timestamp.desc()).limit(COUNT_HUYNIA).all()[::-1]]
+        y = [record.temperature for record in Record.query.order_by(Record.timestamp.desc()).limit(COUNT_STEP
+    ).all()[::-1]]
         connected_mk = Record.query.order_by(Record.timestamp.desc()).first().count_controllers
 
         # Преобразование чисел в формат Python-friendly для сериализации в JSON
