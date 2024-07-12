@@ -19,6 +19,7 @@ class Port:
     """
     Класс порта
     """
+
     def __init__(self, port: str):
         self.name = port
         self.port = None
@@ -36,7 +37,7 @@ class Port:
         except:
             return False
 
-    def read(self) -> bool | tuple[str, int] | bool:
+    def read(self) -> bool | list[str, str] | bool:
         """
         Чтение данных с МК
         """
@@ -72,11 +73,12 @@ class Port:
                 return True
             else:
                 if len(result) == 1:
-                    return self.control.geolocation, result[0]
+                    return [self.control.geolocation, result[0]]
                 else:
                     return False
         except:
             self.control = None
+            self.port = None
             return False
 
 
@@ -91,18 +93,28 @@ inited_ports = {'COM3': None,
 hash_id = {}  # 'COM' - Controller
 
 
+def checker(result: list[str, str]) -> list[str, int] | None:
+    if isinstance(result, list) and len(result) == 2:
+        try:
+            result[1] = int(result[1])
+            return result
+        except:
+            return None
+    return None
+
+
 def port_cycle(ports: list[Port]):
     output_data = []
     for port in ports:
         if port.port is None:
             state = port.try_init()
             if state:
-                result = port.read()
-                if isinstance(result, tuple):
+                result = checker(port.read())
+                if isinstance(result, list):
                     output_data.append(result)
         else:
-            result = port.read()
-            if isinstance(result, tuple):
+            result = checker(port.read())
+            if isinstance(result, list):
                 output_data.append(result)
     return output_data
 
