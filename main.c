@@ -37,10 +37,11 @@ int main(void) {
     printf("%s %d\n", GEOLOCATION, ID);
 
     // Ожидание ответа сервера
+    #define const_pr = 3
     int count = 0;
 
     char buff[32];
-    while (count < 2) {
+    while (count < const_pr) {
         gets(buff);
         if (strstr(buff, "OK") != NULL) {
             break;
