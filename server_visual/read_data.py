@@ -67,12 +67,13 @@ class Port:
             return False
 
 
-mass_ports = [Port('COM3'), Port('COM4')]  # Порт - инициализирован ли он - используется ли он
+mass_ports = [Port('COM3'), Port('COM4'), Port('COM5')]  # Порт - инициализирован ли он - используется ли он
 
 existing_controllers = []
 
 inited_ports = {'COM3': None,
-                'COM4': None}  # 'COM' - Port
+                'COM4': None,
+                'COM5': None}  # 'COM' - Port
 
 hash_id = {}  # 'COM' - Controller
 
