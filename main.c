@@ -6,9 +6,9 @@
 #include <xtimer.h>
 #include <ds18.h>
 
-#define ID 0
+#define ID (1)
 
-#define SAMPLING_PERIOD 3000
+#define SAMPLING_PERIOD (3000)
 // sudo stlink -P examples/smart-server-sensor/bin/stm32f334c8-disco/lab_duolingo.bin 0x08000000
 // sudo stlink -P bin/stm32f334c8-disco/lab_duolingo.bin 0x08000000
 
