@@ -1,19 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- Includes -->
     <script src="https://cdn.plot.ly/plotly-2.3.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.png') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Meta -->
-    <meta charset="UTF-8">
-    <meta lang="ru">
-    <meta description="This is study project ">
-    <meta autor="Exist team">
-    <title>SSS</title>
-    <!-- CSS -->
     <style>
         #graph {
             width: 600px;
@@ -89,7 +80,9 @@
     <div id="graph_outer"><div id="graph"></div></div>
     <div id="mid"></div>
     <div id="foot"></div>
-    <div style="margin: 20px; color: white"> - </div>
+    <div style="margin: 20px; color: white"> я автор великих костылей </div>
+
+<!--    <div id="hui"></div>-->
 
     <div class="accordion" id="accordionik">
 
@@ -107,13 +100,12 @@
         </div>
     </div>
 
-    <!-- JS -->
     <script>
         function updateData() {
             fetch('/update')
             .then(response => response.json())
             .then(data => {
-                var connected_mk = data.cmk;
+                var connected_mk = data.cmk[data.cmk.length-1];
                 document.getElementById("foot").innerText = "Количество подключенных устройств: " + connected_mk.toString();
 
                 var trace = {
@@ -150,10 +142,9 @@
             .then(data => {
                 var time = data.time;
                 var temp = data.temp;
+                var cmk = data.cmk;
 
                 var outputDiv = document.getElementById("history");
-
-                // document.getElementById("hui").innerText = k.toString() + " " + temp.length.toString();
 
                 if ((time.length >= k) && (temp.length >= k)) {
 
@@ -162,7 +153,7 @@
 
                     for (var i=0; i<10; i++) {
                         var paragraph = document.createElement('p');
-                        paragraph.textContent = temp[k + i].toFixed(4).toString() + " " + time[k + i].toFixed(4).toString();
+                        paragraph.textContent = temp[k + i].toFixed(4).toString() + "\u00A0\u00A0\u00A0" + time[k + i].toFixed(4).toString() + "\u00A0\u00A0\u00A0" + cmk[k + i].toString();
                         outputDiv.appendChild(paragraph);
                     }
 

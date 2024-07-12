@@ -81,12 +81,13 @@ def update_data():
         data = Record.query.order_by(Record.timestamp.desc()).all()
         time_arr = [record.timestamp for record in data]
         temp_arr = [record.temperature for record in data]
+        cmk_arr = [record.count_controllers for record in data]
         y = [record.temperature for record in Record.query.order_by(Record.timestamp.desc()).limit(COUNT_STEP
     ).all()[::-1]]
-        connected_mk = Record.query.order_by(Record.timestamp.desc()).first().count_controllers
+        #connected_mk = Record.query.order_by(Record.timestamp.desc()).first().count_controllers
 
         # Преобразование чисел в формат Python-friendly для сериализации в JSON
-        data = {'x': x, 'y': y, 'cmk': connected_mk, 'time': time_arr, 'temp': temp_arr}
+        data = {'x': x, 'y': y, 'cmk': cmk_arr, 'time': time_arr, 'temp': temp_arr}
 
         return jsonify(data)
 
