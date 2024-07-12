@@ -8,8 +8,10 @@ from threading import Thread
 
 import numpy as np
 
+# Метки оси x для отображения данных
 x = np.arange(0, 10, 0.1)
 
+# Интервал получения данных с датчиков
 SLEEP_TIME = 3
 
 #  ______     __  __     ______        ______     ______     ______     __
@@ -29,11 +31,12 @@ app = Flask(__name__)
 # Очередь с данными
 data_queue = Queue()
 
-# подключение базы данных
+# Подключение базы данных
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 
 
+# Модель записи БД
 class Record(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     temperature = db.Column(db.Float, unique=False, nullable=True)
@@ -44,19 +47,21 @@ class Record(db.Model):
         return f'<Record {self.temperature}>'
 
 
+# Получение темперазуры с последующей записью в БД
 def get_temp():
     with app.app_context():
         while True:
             temperature, count_controllers = read()
             db.session.add(Record(temperature=temperature, count_controllers=count_controllers, timestamp=time.time()))
-            # print(temperature, count_controllers)
             db.session.commit()
             time.sleep(SLEEP_TIME)
 
 
+# Инициализация и запуск потока получения данных с датчиков
 thread = Thread(target=get_temp)
 thread.start()
 
+# Инициализация таблиц БД
 with app.app_context():
     db.create_all()
 
@@ -68,6 +73,7 @@ def main_page():
     return render_template('index.html', context={'data': list(data_queue.queue)})
 
 
+# Обновление данных
 @app.route('/update', methods=['GET', 'POST'])
 def update_data():
     with app.app_context():

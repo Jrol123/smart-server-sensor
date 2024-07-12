@@ -3,10 +3,12 @@ import io
 
 from serial.serialutil import EIGHTBITS
 
+# Константы
 PERIPH_ERROR = "Could not read temperature"
 OK = "OK\n"
 
 
+# Класс контроллера
 class Controller:
     def __init__(self, id: int, geolocation: str):
         self.id = id
@@ -14,12 +16,19 @@ class Controller:
 
 
 class Port:
+    """
+    Класс порта
+    """
     def __init__(self, port: str):
         self.name = port
         self.port = None
         self.control = None
 
     def try_init(self) -> bool:
+        """
+        Попытка инициализации
+
+        """
         try:
             self.port = io.TextIOWrapper(serial.Serial(self.name, baudrate=115200, bytesize=EIGHTBITS, timeout=1),
                                          newline='\n')
@@ -28,25 +37,29 @@ class Port:
             return False
 
     def read(self) -> bool | tuple[str, int] | bool:
+        """
+        Чтение данных с МК
+        """
         try:
-            # геолокация (пробел) id
+            # ? Формат данных: Геолокация (пробел) id
             result = self.port.readline()
 
             print(result)
 
             result = result.replace('\n', '')
 
-            # Если ошибка датчика
+            # Обработка ошибки датчика
             if result == PERIPH_ERROR or result == '':
                 return False
             result = result.split(' ')
 
-            # Считывает первую строку RIOT-а
+            # Считывание первой строку RIOT
             if len(result) > 2:
                 result = self.port.readline().replace('\n', '').split(' ')
 
             # Если не привязан контроллер
             if self.control is None:
+                self.port.write(OK)
                 found = False
                 for control in existing_controllers:
                     if int(result[1]) == control.id:
@@ -95,6 +108,9 @@ def port_cycle(ports: list[Port]):
 
 
 def calc_temp(mass_data: list[str, int]) -> float | None:
+    """
+    Перевод полученной строки в число
+    """
     if len(mass_data) == 0:
         return None
     print(mass_data)
@@ -107,8 +123,6 @@ def read() -> tuple[float | None, int]:
     :return: Средняя температура (если есть), число задействованны датчиков
     """
     data_output = port_cycle(mass_ports)
-    # for port in mass_opened_ports:
-    # data_output.append(port.read())
 
     temperature = calc_temp(data_output)
     return temperature, len(data_output)
