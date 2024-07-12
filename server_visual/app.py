@@ -1,4 +1,4 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, jsonify
 from queue import Queue
 from flask_sqlalchemy import SQLAlchemy
 
@@ -6,7 +6,6 @@ from read_data import read
 import time
 from threading import Thread
 
-import jsonify
 import numpy as np
 
 x = np.arange(0, 10, 0.1)
