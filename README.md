@@ -24,9 +24,12 @@
 ## Прошивка
 
 
-# Распределение обязанностей
-1. **ARTEMII POPOVKIN**
+# Командная работы
+1. [**ARTEMII POPOVKIN**](https://github.com/Jrol123)
 	- Тимлидер
 	- Продумал финальный вариант работы сервера и прошивки. 
 	- Модуль `read_port`.
-2. **ARTEM GROMYKO**
+2. [**ARTEM GROMYKO**](https://github.com/IAmSerepok)
+	- Серверная часть
+3. [**SERGEY GLUSCHENKO**](https://github.com/Tyferse)
+4. [**LUTAR VLADISLAV**](https://github.com/RezerdPrime)
