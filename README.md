@@ -26,10 +26,16 @@
 
 # Командная работы
 1. [**ARTEMII POPOVKIN**](https://github.com/Jrol123)
-	- Тимлидер
+	- Тимлидер.
 	- Продумал финальный вариант работы сервера и прошивки. 
 	- Модуль `read_port`.
 2. [**ARTEM GROMYKO**](https://github.com/IAmSerepok)
-	- Серверная часть
+	- Серверная часть.
+		+ Создание потока, базовая настройка *flusk*-а
+	- База данных.
 3. [**SERGEY GLUSCHENKO**](https://github.com/Tyferse)
+	- Работа над прошивкой микроконтроллера.
+	- Сначала делал с учётом `ethernet`.
 4. [**LUTAR VLADISLAV**](https://github.com/RezerdPrime)
+	- Визуальная составляющая.
+		+ Графики, etc.
