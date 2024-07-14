@@ -15,7 +15,8 @@
 // Частота считывания данных
 #define SAMPLING_PERIOD (3000)
 
-int main(void) {
+int main(void)
+{
     // Объявление основных переменных
     ds18_t dev;
     ds18_params_t ds18_params;
@@ -29,7 +30,8 @@ int main(void) {
     xtimer_init();
 
     // Инициализация датчика с обработкой ошибки
-    if (ds18_init(&dev, &ds18_params) == DS18_ERROR) {
+    if (ds18_init(&dev, &ds18_params) == DS18_ERROR)
+    {
         puts("FAILED");
         return 1;
     }
@@ -37,16 +39,21 @@ int main(void) {
     // Отправка метаданных при подключении
     printf("%s %d\n", GEOLOCATION, ID);
 
-    // Ожидание ответа сервера
-    #define const_pr (3)
+// Ожидание ответа сервера
+// ! Костыль. Но по-другому никак, так как почеу-то pyserial не пишет в COM порт.
+#define const_pr (3)
     int count = 0;
 
     char buff[32];
-    while (count < const_pr) {
+    while (count < const_pr)
+    {
         gets(buff);
-        if (strstr(buff, "OK") != NULL) {
+        if (strstr(buff, "OK") != NULL)
+        {
             break;
-        } else {
+        }
+        else
+        {
             printf("%s %d\n", GEOLOCATION, ID);
             xtimer_sleep(1);
         }
@@ -54,12 +61,16 @@ int main(void) {
     }
 
     // Отправка температуры
-    while (1) {
+    while (1)
+    {
         // Успех
-        if (ds18_get_temperature(&dev, &temperature) == DS18_OK) {
+        if (ds18_get_temperature(&dev, &temperature) == DS18_OK)
+        {
             printf("%d\n", temperature);
-        } else {
-        // Неудача
+        }
+        else
+        {
+            // Неудача
             puts("Could not read temperature");
         }
         xtimer_msleep(SAMPLING_PERIOD);
