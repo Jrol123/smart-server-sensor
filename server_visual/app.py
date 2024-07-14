@@ -47,7 +47,7 @@ class Record(db.Model):
         return f'<Record {self.temperature}>'
 
 
-# Получение темперазуры с последующей записью в БД
+# Получение температуры с последующей записью в БД
 def get_temp():
     with app.app_context():
         while True:
