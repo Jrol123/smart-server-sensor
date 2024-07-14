@@ -31,7 +31,7 @@
 	- Модуль `read_port`.
 2. [**ARTEM GROMYKO**](https://github.com/IAmSerepok)
 	- Серверная часть.
-		+ Создание потока, базовая настройка *flusk*-а
+		+ Создание потока, настройка *flusk*-а
 	- База данных.
 3. [**SERGEY GLUSCHENKO**](https://github.com/Tyferse)
 	- Работа над прошивкой микроконтроллера.
