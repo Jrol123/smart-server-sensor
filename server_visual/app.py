@@ -1,18 +1,19 @@
-from flask import Flask, render_template, jsonify
-from queue import Queue
+from flask import Flask, render_template, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
-
-from read_data import read
-import time
+from queue import Queue
 from threading import Thread
+import time
+
+from read_port import read
 
 COUNT_STEP = 10
+"""Количество меток для отображения данных"""
 
-# Метки оси x для отображения данных
 x = [i for i in range(0, COUNT_STEP)]
+"""Метки оси x для отображения данных"""
 
-# Интервал получения данных с датчиков
 SLEEP_TIME = 3
+"""Интервал получения данных с датчиков"""
 
 #  ______     __  __     ______        ______     ______     ______     __
 # /\  __ \   /\ \/\ \   /\  == \      /\  ___\   /\  __ \   /\  __ \   /\ \
@@ -28,16 +29,28 @@ SLEEP_TIME = 3
 
 app = Flask(__name__)
 
-# Очередь с данными
+# TODO: Убрать очередь за ненадобностью.
 data_queue = Queue()
+"""Очередь с данными"""
 
-# Подключение базы данных
+# Подключение базы данных.
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
+"""База данных"""
 
 
-# Модель записи БД
 class Record(db.Model):
+    """
+    Запись температуры.
+
+    Для вычисления температуры см. `read_port`
+
+    :var id: id записи.
+    :var temperature: Вычисленная температура.
+    :var count_controllers: Количество контроллеров.
+    :var timestamp: Время снятия показаний с контроллеров.
+
+    """
     id = db.Column(db.Integer, primary_key=True)
     temperature = db.Column(db.Float, unique=False, nullable=True)
     count_controllers = db.Column(db.Integer, unique=False, nullable=False)
@@ -47,8 +60,14 @@ class Record(db.Model):
         return f'<Record {self.temperature}>'
 
 
-# Получение температуры с последующей записью в БД
-def get_temp():
+def get_temp() -> None:
+    """
+    Получение температуры с последующей записью в БД.
+
+    :return: Создаёт запись в базе данных.
+
+    """
+    # TODO: Вводить базу данных как аргумент функции (?)
     with app.app_context():
         while True:
             temperature, count_controllers = read()
@@ -57,36 +76,48 @@ def get_temp():
             time.sleep(SLEEP_TIME)
 
 
-# Инициализация и запуск потока получения данных с датчиков
-thread = Thread(target=get_temp)
-thread.start()
-
-# Инициализация таблиц БД
+# Инициализация таблиц БД.
 with app.app_context():
     db.create_all()
 
+# Инициализация и запуск потока получения данных с датчиков.
+thread = Thread(target=get_temp)
+thread.start()
 
-# Главная страница
+
+# TODO: Сделать перехват ошибки thread-а с его последующим возобновлением.
+
+
 @app.route('/')
-def main_page():
-    read()
+def main_page() -> str:
+    """
+    Главная страница.
+
+    :return: Заполненный template.
+
+    """
     return render_template('index.html', context={'data': list(data_queue.queue)})
 
 
-# Обновление данных
+# Обновление данных.
 @app.route('/update', methods=['GET', 'POST'])
-def update_data():
+def update_data() -> Response:
+    """
+    Обновление данных на странице.
+
+    :return: Обновляет данные на `index.html`.
+
+    """
     with app.app_context():
-        # Извлечение данных из БД
+        # Извлечение данных из БД.
         data = Record.query.order_by(Record.timestamp.desc()).all()
         time_arr = [record.timestamp for record in data]
         temp_arr = [record.temperature for record in data]
         connected_mk_arr = [record.count_controllers for record in data]
         y = [record.temperature for record in Record.query.order_by(Record.timestamp.desc()).limit(COUNT_STEP
-    ).all()[::-1]]
-        # connected_mk = Record.query.order_by(Record.timestamp.desc()).first().count_controllers
+                                                                                                   ).all()[::-1]]
 
-        # Преобразование чисел в формат Python-friendly для сериализации в JSON
+        # Преобразование чисел в формат Python-friendly для сериализации в JSON.
         data = {'x': x, 'y': y, 'cmk': connected_mk_arr, 'time': time_arr, 'temp': temp_arr}
 
         return jsonify(data)
