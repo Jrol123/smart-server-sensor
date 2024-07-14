@@ -5,6 +5,7 @@
 #include <board.h>
 #include <xtimer.h>
 #include <ds18.h>
+// TODO: Переработать define под config.txt
 
 // ID устройства
 #define ID (0)

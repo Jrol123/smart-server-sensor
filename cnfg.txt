@@ -1,1 +1,4 @@
-id=0
+// ID устройства
+#define ID (0)
+// Геолокация
+#define GEOLOCATION ("00.00.00.00")
