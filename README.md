@@ -29,13 +29,13 @@
 	- Тимлидер.
 	- Продумал финальный вариант работы сервера и прошивки. 
 	- Модуль `read_port`.
-2. [**ARTEM GROMYKO**](https://github.com/IAmSerepok)
+2. [**Anonimous 1**](https://github.com/IAmSerepok)
 	- Серверная часть.
 		+ Создание потока, настройка *flusk*-а
 	- База данных.
-3. [**SERGEY GLUSCHENKO**](https://github.com/Tyferse)
+3. [**Anonimous 2**](https://github.com/Tyferse)
 	- Работа над прошивкой микроконтроллера.
 	- Сначала делал с учётом `ethernet`.
-4. [**LUTAR VLADISLAV**](https://github.com/RezerdPrime)
+4. [**Anonimous 3**](https://github.com/RezerdPrime)
 	- Визуальная составляющая.
 		+ Графики, etc.
