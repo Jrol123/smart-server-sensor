@@ -29,7 +29,7 @@
 	- Тимлидер.
 	- Продумал финальный вариант работы сервера и прошивки. 
 	- Модуль `read_port`.
-2. [**Anonimous 1**](https://github.com/IAmSerepok)
+2. [**ARTEM GROMYKO**](https://github.com/IAmSerepok)
 	- Серверная часть.
 		+ Создание потока, настройка *flusk*-а
 	- База данных.
